@@ -99,8 +99,8 @@ float Calculate_polygon_area(float *polygon, unsigned char amount_of_vertices)
 
     for (unsigned char i = 0; i < amount_of_vertices; i++)
     {
-        out += po
-        out -= 
+        out += polygon[i * 2] * polygon[(( ( (i + 1) % amount_of_vertices) ) * 2) + 1];
+        out -= polygon[(i * 2) + 1] * polygon[( ( (i + 1) % amount_of_vertices) ) * 2];
     }
 
     return (out / 2.0);
