@@ -51,7 +51,10 @@ complex32_t Complex_mul(complex32_t a, complex32_t b)
 complex32_t Complex_div(complex32_t a, complex32_t b)
 {
     float denominator = (b.real * b.real + b.imag * b.imag);
-    return (complex32_t) {((a.real * b.real + a.imag * b.imag) / denominator), ((a.imag * b.real - a.real * b.imag) / denominator)};
+    if (denominator > 0.0)
+        return (complex32_t) {((a.real * b.real + a.imag * b.imag) / denominator), ((a.imag * b.real - a.real * b.imag) / denominator)};
+    else
+        return (complex32_t) {INFINITY, INFINITY};
 }
 
 /***********************************************************
@@ -82,6 +85,9 @@ complex32_t Complex_pow(complex32_t z, signed char degree)
 ************************************************************/
 complex32_t Complex_root(complex32_t z, signed char degree, unsigned char root_pos)
 {
+    if (degree == 0)
+        return (complex32_t ) {NAN, NAN};
+        
     float abs = Complex_abs(z);
     float arg = Complex_arg(z);
     abs = powf(abs, (1.0 / degree));
