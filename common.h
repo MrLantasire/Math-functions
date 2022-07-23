@@ -9,4 +9,3 @@
 #define RAD_TO_GRAD(x) ( (x) * 180. / M_PI)     // Перевод радианы в градусы
 
 #endif //__COMMON_H
-
