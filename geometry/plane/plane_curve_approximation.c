@@ -15,7 +15,7 @@
 * y_centr - Координата Y центра окружности
 * r - Радиус окружности
 ************************************************************/
-float Circle_approximation(float *points, unsigned short points_num, float tolerance, float *x_centr, float *y_centr)
+float Circle_approximation(float *points, unsigned short points_num, float *x_centr, float *y_centr)
 {
     float r = 0.0;                              // Радиус окружности
     float *matrix = calloc(12, sizeof(float));  // Матрица системы уравнений
@@ -52,7 +52,7 @@ float Circle_approximation(float *points, unsigned short points_num, float toler
     matrix[9] = matrix[6];                                  // y
     matrix[10] = (float) points_num;                        // n
 
-    if (Gaussian_elimination(matrix, 3, 4, tolerance, matrix) == 3U)
+    if (Gaussian_elimination(matrix, 3, 4, 1.E-37, matrix) == 3U)
     {
         // Решение системы уравнений методом Гаусса
         r = matrix[11] / matrix[10];
@@ -83,7 +83,7 @@ float Circle_approximation(float *points, unsigned short points_num, float toler
 * y_vector - Координата Y направляющего вектора прямой
 * r - Длина направляющего вектора
 ************************************************************/
-float Line_approximation(float *points, unsigned short points_num, float tolerance, float *x_point, float *y_point, float *x_vector, float *y_vector)
+float Line_approximation(float *points, unsigned short points_num, float *x_point, float *y_point, float *x_vector, float *y_vector)
 {
     float r = 0.0;  // Длина направляющего вектора
 
