@@ -18,7 +18,7 @@
 float Circle_approximation(float *points, unsigned short points_num, float tolerance, float *x_centr, float *y_centr)
 {
     float r = 0.0;                              // Радиус окружности
-    float *matrix = calloc(12, sizeof(float));  // Матрица системы уравннений
+    float *matrix = calloc(12, sizeof(float));  // Матрица системы уравнений
 
     // Обнуление выходных параметров 
     *x_centr = 0.0;
