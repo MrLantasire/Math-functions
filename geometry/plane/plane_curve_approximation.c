@@ -60,7 +60,7 @@ float Circle_approximation(float *points, unsigned short points_num, float toler
         *x_centr = (matrix[3] - matrix[2] * r - matrix[1] * (*y_centr)) / matrix[0];
 
         // Вычисление результирующих значений
-        r = sqrt((*x_centr) * (*x_centr) + (*y_centr) * (*y_centr) - 4.0 * r);
+        r = sqrt((*x_centr) * (*x_centr) + (*y_centr) * (*y_centr) - 4.0 * r) / 2.0;
         *x_centr /= -2.0;
         *y_centr /= -2.0;
     }
