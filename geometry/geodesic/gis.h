@@ -1,5 +1,5 @@
-#ifndef __COORDINATES_H
-#define __COORDINATES_H
+#ifndef __GIS_H
+#define __GIS_H
 
 #define EARTH_RADIUS 6367449.1458234153093  // Радиус Земли в системе WGS-84 (м)
 
@@ -12,4 +12,4 @@ extern float Get_direction_from_geopoints(float first_latitude, float first_long
 //Функция вычисления координат второй точки относительно первой по направлению и расстоянию
 extern void Get_geopoint_to_direction(float latitude, float longitude, float direction, float distance, float radius, float *out_latitude, float *out_longitude);
 
-#endif //__COORDINATES_H
+#endif //__GIS_H

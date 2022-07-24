@@ -1,4 +1,4 @@
-#include "coordinates.h"
+#include "gis.h"
 #include "common.h"
 
 /***********************************************************
