@@ -32,26 +32,24 @@ float Circle_approximation(float *points, unsigned short points_num, float *x_ce
     }
 
     // Вычисление множителей для системы уравнений
-    float xx = 0.0;
-    float yy = 0.0;
     for (unsigned short i = 0; i < points_num; i++)
     {
-        xx = points[i * 2] * points[i * 2];
-        yy = points[i * 2 + 1] * points[i * 2 + 1];
+        matrix[4] = points[i * 2] * points[i * 2];                  // Использование для промежуточных вычислений (xi^2)
+        matrix[8] = points[i * 2 + 1] * points[i * 2 + 1];          // Использование для промежуточных вычислений (yi^2)
 
-        matrix[0] += xx;                                    // x^2
-        matrix[1] += points[i * 2] * points[i * 2 + 1];     // xy
-        matrix[2] += points[i * 2];                         // x
-        matrix[3] -= points[i * 2] * (xx + yy);             // -x(x^2 + y^2)
-        matrix[5] += yy;                                    // y^2
-        matrix[6] += points[i * 2 + 1];                     // y
-        matrix[7] -= points[i * 2 + 1] * (xx + yy);         // -y(x^2 + y^2)
-        matrix[11] -= xx + yy;                              // -(x^2 + y^2)
+        matrix[0] += matrix[4];                                     // x^2
+        matrix[1] += points[i * 2] * points[i * 2 + 1];             // xy
+        matrix[2] += points[i * 2];                                 // x
+        matrix[3] -= points[i * 2] * (matrix[4] + matrix[8]);       // -x(x^2 + y^2)
+        matrix[5] += matrix[8];                                     // y^2
+        matrix[6] += points[i * 2 + 1];                             // y
+        matrix[7] -= points[i * 2 + 1] * (matrix[4] + matrix[8]);   // -y(x^2 + y^2)
+        matrix[11] -= matrix[4] + matrix[8];                        // -(x^2 + y^2)
     }
-    matrix[4] = matrix[1];                                  // xy
-    matrix[8] = matrix[2];                                  // x
-    matrix[9] = matrix[6];                                  // y
-    matrix[10] = (float) points_num;                        // n
+    matrix[4] = matrix[1];                                          // xy
+    matrix[8] = matrix[2];                                          // x
+    matrix[9] = matrix[6];                                          // y
+    matrix[10] = (float) points_num;                                // n
 
     if (Gaussian_elimination(matrix, 3, 4, 1.E-37, matrix) == 3U)
     {
