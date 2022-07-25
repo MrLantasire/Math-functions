@@ -2,6 +2,7 @@
 #include "plane_curve_approximation.h"
 #include "common.h"
 #include "algebra\linear\matrix.h"
+#include "algebra\equation.h"
 
 /***********************************************************
 * Функция нахождения аппроксимирующей окружности, описываемой уравнением вида
@@ -81,12 +82,93 @@ float Circle_approximation(float *points, unsigned short points_num, float *x_ce
 * y_point - Координата Y начальной точки прямой (центр масс всех точек, при условии, что массы точек равны)
 * x_vector - Координата X направляющего вектора прямой
 * y_vector - Координата Y направляющего вектора прямой
-* r - Длина направляющего вектора
+* return - Длина направляющего вектора
 ************************************************************/
 float Line_approximation(float *points, unsigned short points_num, float *x_point, float *y_point, float *x_vector, float *y_vector)
 {
-    float r = 0.0;  // Длина направляющего вектора
+    float *matrix = calloc(6, sizeof(float));   // Матрица системы уравнений
+    complex32_t *solutions = calloc(2, sizeof(complex32_t));
 
+    // Обнуление выходных параметров 
+    *x_point = 0.0;
+    *y_point = 0.0;
+    *x_vector = 0.0;
+    *y_vector = 0.0;
 
-    return r;
+    // Обнуление матрицы
+    for(unsigned short i = 0; i < 6; i++)
+    {
+        matrix[i] = 0.0;
+    }
+
+    // Определение координат начальной точки прямой как среднее арифметическое всех координат
+    for (unsigned short i = 0; i < points_num; i++)
+    {
+        *x_point += points[i * 2];
+        *y_point += points[i * 2 + 1];
+    }
+    *x_point /= points_num;
+    *y_point /= points_num;
+
+    // Вычисление тензора моментов инерции
+    for (unsigned short i = 0; i < points_num; i++)
+    {
+        // Вспомогательные вычисления
+        matrix[4] = points[i * 2] - (*x_point);
+        matrix[5] = points[i * 2 + 1] - (*y_point);
+        for (unsigned short j = 0; j < 2; j++)
+        {
+            matrix[j * 2 + j] += matrix[4] * matrix[4] + matrix[5] * matrix[5] - matrix[4 + j] * matrix[4 + j];
+            matrix[1 + j] -= matrix[4] * matrix[5];
+        }
+    }
+
+    if(!(Solve_quadratic_equation(-1.0, (matrix[0] + matrix[3]), (matrix[1] * matrix[2] - matrix[0] * matrix[3]), solutions ) < 0.0))
+    {
+        // Решениями системы будут максимальный и минимальный моменты инерции (выбирается минимальный)
+        if (ABS(solutions[0].real) > ABS(solutions[1].real))
+        {
+            matrix[0] -= solutions[1].real;
+            matrix[3] -= solutions[1].real;
+        }
+        else
+        {
+            matrix[0] -= solutions[0].real;
+            matrix[3] -= solutions[0].real;
+        }
+
+        // Вычисление направляющего вектора прямой
+        if (Gaussian_elimination(matrix, 2U, 2U, 1.E-37,matrix))
+        {
+            if(!(ABS(matrix[1]) > 0.0))
+            {
+                *x_vector = 0.0;
+                *y_vector = 1.0;
+            }
+            else
+            {
+                if(!(ABS(matrix[0]) > 0.0))
+                {
+                    *x_vector = 1.0;
+                    *y_vector = 0.0;
+                }
+                else
+                {
+                    *y_vector = 1.0;
+                    *x_vector = -1.0 * (*y_vector) * matrix[1] / matrix[0];
+                }
+            }
+        }
+        // Если ранг матрицы равен нулю, то бесконечное множество решений
+        else
+        {
+            // Как вариант одного из бесконечного множества решений
+            *x_vector = 1.0;
+            *y_vector = 0.0;
+        }
+    }
+
+    free(matrix);
+    free(solutions);
+    return sqrt((*x_vector) * (*x_vector) + (*y_vector) * (*y_vector));
 }
