@@ -27,14 +27,10 @@ bool Is_point_in_polygon(float coordinate_x, float coordinate_y, float *polygon,
 
     // Установка sign для первой точки
     b = polygon[((amount_of_vertices - 1) * 2) + 1] - polygon[1];
-    if ( b > 0.0)
-    {
+    if ( b > 0.0) 
         sign = 1;
-    }
-    else
-    {
+    else 
         sign = -1;
-    }
 
     for (unsigned char i = 0; i < amount_of_vertices; i++ )
     {
@@ -45,40 +41,31 @@ bool Is_point_in_polygon(float coordinate_x, float coordinate_y, float *polygon,
         {
             if ( (ABS(polygon[(i * 2) + 1] - coordinate_y) + 0.5 * tolerance) < tolerance )
             {
-                if ( ((polygon[i * 2] - coordinate_x + tolerance * ((float) sign)) > 0.0) )
-                {
+                if ( ((polygon[i * 2] - coordinate_x + tolerance * ((float) sign)) > 0.0) ) 
                     count += 1;
-                }
             }
         }
 
         if ( ABS(b) > tolerance)
         {
-            if ( b > 0.0)
-            {
+            if ( b > 0.0) 
                 sign = 1;
-            }
-            else
-            {
+            else 
                 sign = -1;
-            }
 
             t1 = (coordinate_y - polygon[(( ( (i + 1) % amount_of_vertices) ) * 2) + 1])/b;
             if ( !((t1 > 1.0) || (t1 < 0.0)))
             {
                 t0 = polygon[( ( (i + 1) % amount_of_vertices) ) * 2] - coordinate_x + a * t1;
-                if ( !((t0 + tolerance * ((float) sign)) < 0.0) )
-                {
+
+                if ( !((t0 + tolerance * ((float) sign)) < 0.0) ) 
                     count += 1;
-                }
             }
         }
     }
 
-    if ((count % 2) == 0)
-    {
+    if ((count % 2) == 0) 
         out = false;
-    }
 
     return out;
 }

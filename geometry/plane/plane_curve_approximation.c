@@ -54,9 +54,13 @@ float Circle_approximation(float *points, unsigned short points_num, float *x_ce
     if (Gaussian_elimination(matrix, 3, 4, 1.E-37, matrix) == 3U)
     {
         // Решение системы уравнений методом Гаусса
-        r = matrix[11] / matrix[10];
-        *y_centr = (matrix[7] - matrix[6] * r) / matrix[5];
-        *x_centr = (matrix[3] - matrix[2] * r - matrix[1] * (*y_centr)) / matrix[0];
+        // Если 0, то нет решения системы (система несовместная)
+        if (ABS(matrix[10]) > 0.0)
+        {
+            r = matrix[11] / matrix[10];
+            *y_centr = (matrix[7] - matrix[6] * r) / matrix[5];
+            *x_centr = (matrix[3] - matrix[2] * r - matrix[1] * (*y_centr)) / matrix[0];
+        }   
 
         // Вычисление результирующих значений
         r = sqrt((*x_centr) * (*x_centr) + (*y_centr) * (*y_centr) - 4.0 * r) / 2.0;
@@ -138,23 +142,15 @@ float Line_approximation(float *points, unsigned short points_num, float *x_poin
         // Вычисление направляющего вектора прямой
         if (Gaussian_elimination(matrix, 2U, 2U, 1.E-37,matrix))
         {
-            if(!(ABS(matrix[1]) > 0.0))
+            if(!(ABS(matrix[0]) > 0.0))
             {
-                *x_vector = 0.0;
-                *y_vector = 1.0;
+                *x_vector = 1.0;
+                *y_vector = 0.0;
             }
             else
             {
-                if(!(ABS(matrix[0]) > 0.0))
-                {
-                    *x_vector = 1.0;
-                    *y_vector = 0.0;
-                }
-                else
-                {
-                    *y_vector = 1.0;
-                    *x_vector = -1.0 * (*y_vector) * matrix[1] / matrix[0];
-                }
+                *y_vector = 1.0;
+                *x_vector = -1.0 * (*y_vector) * matrix[1] / matrix[0];
             }
         }
         // Если ранг матрицы равен нулю, то бесконечное множество решений
