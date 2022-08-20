@@ -72,13 +72,13 @@ float Line_approximation_3D(float *points, unsigned short points_num, float *lin
         // Третий инвариант
         matrix[11] += matrix[i * 3] * matrix[((i + 1) % 3) * 3 + 1] * matrix[((i + 2) % 3) * 3 + 2];
         matrix[11] -= matrix[i * 3] * matrix[((i + 1) % 3) * 3 + 2] * matrix[((i + 2) % 3) * 3 + 1];
-    }
+    }  
 
     if(!(Solve_cubic_equation(-1.0, matrix[9], (-1.0 * matrix[10]), matrix[11], solutions) < 0.0))
     {
         // Решениями системы будут 3 момента инерции (выбирается минимальный)
         matrix[9] = ABS(solutions[0].real) > ABS(solutions[1].real) ? solutions[1].real : solutions[0].real;
-        if(ABS(matrix[9]) > ABS(solutions[2].real)) 
+        if(ABS(matrix[9]) > ABS(solutions[2].real))
             matrix[9] = solutions[2].real;
 
         // Изменение исходной матрицы (преобразование диагональных элементов)
@@ -87,28 +87,32 @@ float Line_approximation_3D(float *points, unsigned short points_num, float *lin
         matrix[8] -= matrix[9]; 
 
         // Вычисление направляющего вектора прямой
-        if (Gaussian_elimination(matrix, 3U, 3U, 1.E-37,matrix))
+        if (Gaussian_elimination(&matrix[0], 3U, 3U, 1.E-37, &matrix[0]))
         {
-            if(!(ABS(matrix[0]) > 0.0))
+
+            // Поиск минимального значения в матрице
+            unsigned char num_of_min = 0U;
+            matrix[9] = ABS(matrix[0]);
+            for (unsigned char i = 1; i < 3; i++)
             {
-                lines_param[3] = 1.0;
-                lines_param[4] = 0.0;
-                lines_param[5] = 0.0;
-            }
-            else
-            {
-                if (!(ABS(matrix[4]) > 0.0))
+                matrix[10] = ABS(matrix[i*4U]);
+                if (matrix[9] > matrix[10])
                 {
-                    lines_param[4] = 1.0;
-                    lines_param[5] = 0.0;
+                    matrix[9] = matrix[10];
+                    num_of_min = i;
                 }
-                else
+            }
+
+            // Вычисление значений направляющего вектора
+            lines_param[3 + num_of_min] = 1.0;
+            for(unsigned char i = num_of_min; i > 0; i--)
+            {
+                for(unsigned char j = i - 1; j < 2; j++)
                 {
-                    lines_param[5] = 1.0;
-                    lines_param[4] = -1.0 * lines_param[5] * matrix[5] / matrix[4];
+                    lines_param[2 + i] -= lines_param[4 + j] * matrix[j + 1 + 3 * (i - 1)];
                 }
 
-                lines_param[3] = -1.0 * (lines_param[4] * matrix[1] + lines_param[5] * matrix[2]) / matrix[0];
+                lines_param[2 + i] /= matrix[4 * (i - 1)];
             }
         }
         // Если ранг матрицы равен нулю, то бесконечное множество решений
