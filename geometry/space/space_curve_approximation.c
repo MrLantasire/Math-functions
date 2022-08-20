@@ -1,8 +1,8 @@
 #include <malloc.h>
 #include "space_curve_approximation.h"
 #include "common.h"
-#include "algebra\linear\matrix.h"
-#include "algebra\equation.h"
+#include "matrix.h"
+#include "equation.h"
 
 /***********************************************************
 * Функция нахождения аппроксимирующей прямой в параметрическом виде, описываемой уравнением вида

@@ -1,0 +1,354 @@
+#include <stdio.h>
+#include "common.h"
+#include "matrix.h"
+#include "complex.h"
+#include "equation.h"
+#include "gis.h"
+#include "polygon.h"
+#include "plane_curve_approximation.h"
+#include "space_curve_approximation.h"
+
+static void Show_matrices(void);
+static void Show_complex_numbers(void);
+static void Show_equations(void);
+static void Show_gis(void);
+static void Show_polygon(void);
+static void Show_plane_curve_approximation(void);
+static void Show_space_curve_approximation(void);
+
+int main()
+{   
+    Show_matrices();
+    Show_complex_numbers();
+    Show_equations();
+    Show_gis();
+    Show_polygon();
+    Show_plane_curve_approximation();
+    Show_space_curve_approximation();
+
+    return 0;
+}
+
+// Примеры работы с функциями модуля "matrix"
+static void Show_matrices(void)
+{
+    
+    // Пример квадратной матрицы
+    static float instance_sq_matrix[4][4] = {   {5.0,4.0,3.0,2.0},
+                                                {1.0,2.0,2.0,5.0},
+                                                {1.0,5.0,1.0,5.0},
+                                                {2.0,1.0,2.0,1.0}};
+
+    // Пример обычной матрицы
+    static float instance_matrix[4][5] = {      {5.0,4.0,3.0,2.0,30.0},
+                                                {1.0,3.0,3.0,6.0,40.0},
+                                                {1.0,1.0,1.0,1.0,10.0},
+                                                {0.0,4.0,5.0,-2.0,15.0}};
+
+    // Пример треугольной матрицы, полученной после Гауссова исключения
+    static float instanse_tr_matrix[4][5] = {0};
+
+    printf("\n");
+
+    // Определитель квадратной матрицы
+    printf("Determinant of matrix 4 x 4 = %f\n", Define_determinant(&instance_sq_matrix[0][0], 4U,1.E-6));
+    // Ранг матрицы и преобразование матрицы к треугольному виду
+    printf("Rank of matrix 4 x 5 = %d\n", Gaussian_elimination(&instance_matrix[0][0], 4U, 5U, 1.E-6, &instanse_tr_matrix[0][0]));
+
+    printf("\nTriangle matrix 4 x 5\n");
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 5; j++)
+        {
+            printf("%f\t", instanse_tr_matrix[i][j]);
+        }
+        printf("\n");
+    }
+    
+    printf("\n");
+}
+
+// Примеры работы с функциями модуля "complex"
+static void Show_complex_numbers(void)
+{
+    // Комплексные числа
+    static complex32_t a = {1.0, 0.0};
+    static complex32_t b = {0.0, 1.0};
+    static complex32_t c = {0};
+
+    printf("\n");
+
+    // Аргумент и модуль комплексных чисел
+    printf("arg(a) = %f ; abs(a) = %f\n", Complex_arg(a), Complex_abs(a));
+    printf("arg(b) = %f ; abs(b) = %f\n", Complex_arg(b), Complex_abs(b));
+
+    // Сложение комплексных чисел
+    c = Complex_add(a,b);
+    printf("a + b = %f%+fi\n", c.real, c.imag);
+
+    // Вычитание комплексных чисел
+    c = Complex_sub(a,b);
+    printf("a - b = %f%+fi\n", c.real, c.imag);
+
+    // Умножение комплексных чисел
+    c = Complex_mul(a,b);
+    printf("a * b = %f%+fi\n", c.real, c.imag);
+
+    // Деление комплексных чисел
+    c = Complex_div(a,b);
+    printf("a / b = %f%+fi\n", c.real, c.imag);
+
+    // Возведение в степень комплексного числа
+    c = Complex_pow(Complex_add(a,b) , 2);
+    printf("(a + b) ^ 2 = %f%+fi\n", c.real, c.imag);
+
+    // Извлечение корня комплексного числа
+    printf("(a - b) ^ (1/4) = ");
+    for (int i = 0; i < 4; i++)
+    {
+        c = Complex_root(Complex_sub(a,b), 4, i);
+        printf("%f%+fi ", c.real, c.imag);
+    }
+    printf("\n");
+
+    // Получение комплексно-сопряженного числа
+    c = Complex_conjugate(b);
+    printf("conjugate(b)= %f%+fi\n", c.real, c.imag);
+
+    printf("\n");
+}
+
+// Примеры работы с функциями модуля "equation"
+static void Show_equations(void)
+{
+    // Массив решений уравнений
+    static complex32_t solutions[3] = {0};
+
+    printf("\n");
+
+    // Решение квадратных уравнений
+    // Дискриминанты > 0
+    printf("Equation x^2 + 3x - 4 = 0\n");
+    printf("Discriminant = %f\n", Solve_quadratic_equation(1.0, 3.0, -4.0, &solutions[0]));
+
+    for (int i = 0; i < 2; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    // Дискриминанты = 0
+    printf("\nEquation 2x^2 - 12x + 18 = 0\n");
+    printf("Discriminant = %f\n", Solve_quadratic_equation(2.0, -12.0, 18.0, &solutions[0]));
+
+    for (int i = 0; i < 2; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    // Дискриминанты < 0
+    printf("\nEquation x^2 + 4 = 0\n");
+    printf("Discriminant = %f\n", Solve_quadratic_equation(1.0, 0.0, 4.0, &solutions[0]));
+
+    for (int i = 0; i < 2; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    // Решение кубических уравнений
+    // Дискриминанты > 0
+    printf("\nEquation x^3 - 6x^2 + 11x - 6 = 0\n");
+    printf("Discriminant = %f\n", Solve_cubic_equation(1.0, -6.0, 11.0, -6.0, &solutions[0]));
+
+    for (int i = 0; i < 3; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    // Дискриминанты = 0
+    printf("\nEquation -2x^3 + 18x^2 - 48x + 32 = 0\n");
+    printf("Discriminant = %f\n", Solve_cubic_equation(-2.0, 18.0, -48.0, 32.0, &solutions[0]));
+
+    for (int i = 0; i < 3; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    // Дискриминанты < 0
+    printf("\nEquation -x^3 + 3x^2 - 9x + 27 = 0\n");
+    printf("Discriminant = %f\n", Solve_cubic_equation(-1.0, 3.0, -9.0, 27.0, &solutions[0]));
+
+    for (int i = 0; i < 3; i++)
+    {
+        printf("x%d =  %f%+fi\n", i+1, solutions[i].real,solutions[i].imag);
+    }   
+
+    printf("\n");
+}
+
+// Примеры работы с функциями модуля "gis"
+static void Show_gis(void)
+{
+    // Координаты Москвы, [градусы]
+    float lat_Mos = 55.755797;
+    float long_Mos = 37.617729;
+    // Координаты Санкт-Петербурга, [градусы]
+    float lat_SPb = 59.939037;
+    float long_SPb = 30.315828;
+    // Координаты Сочи, [градусы]
+    float lat_Soc = 43.585326;
+    float long_Soc = 39.722453;
+    // Координаты Владивосток, [градусы]
+    float lat_Vlk = 43.115295;
+    float long_Vlk = 131.885453;
+
+    printf("\n");
+    
+    // Вычисление расстояний
+    printf("Distance: Moscow - Saint-Peterburg = %f [m]\n", Get_distance_from_geopoints(lat_Mos, long_Mos, lat_SPb, long_SPb, EARTH_RADIUS));
+    printf("Distance: Sochi - Vladivostok = %f [m]\n", Get_distance_from_geopoints(lat_Soc, long_Soc, lat_Vlk, long_Vlk, EARTH_RADIUS));
+
+    // Вычисление направлений
+    printf("Course: Saint-Peterburg - Sochi = %f [grad]\n", Get_direction_from_geopoints(lat_SPb, long_SPb, lat_Soc, long_Soc));
+    printf("Course: Vladivostok - Moscow = %f [grad]\n", Get_direction_from_geopoints(lat_Vlk, long_Vlk, lat_Mos, long_Mos));
+
+    // Вычисление координат по направлению и расстоянию
+    Get_geopoint_to_direction(lat_Soc, long_Soc, -5.591860, 1360820.75, EARTH_RADIUS, &lat_Mos, &long_Mos);
+    Get_geopoint_to_direction(lat_SPb, long_SPb, 56.738583, 6533325.5, EARTH_RADIUS, &lat_Vlk, &long_Vlk);
+    printf("Coordinates Moscow: N%f E%f\n", lat_Mos, long_Mos);
+    printf("Coordinates Vladivostok: N%f E%f\n", lat_Vlk, long_Vlk);
+
+    printf("\n");
+}
+
+static void Show_polygon(void)
+{
+    // Тестовый многоугольник
+    static float test_polygon[6][2] = { {40.0   , 10.0  },
+                                        {25.0   , 35.98 },
+                                        {-5     , 35.98 },
+                                        {-20    , 10.0  },
+                                        {-5     , -15.98},
+                                        {25.0   , -15.98}};
+
+    // Координаты тестовой точки
+    float x_of_point = 10.0;
+    float y_of_point = 10.0;
+
+    printf("\n");
+
+    // Определение положения точки относительно многоугольника
+    for (int i = 0; i < 10; i++)
+    {
+        if (Is_point_in_polygon(x_of_point, y_of_point, &test_polygon[0][0], 6U, 1.E-6))
+        {
+            printf("P%d\t(%f, %f)\tInside poligon.\n", i+1, x_of_point, y_of_point);
+        }
+        else
+        {
+            printf("P%d\t(%f, %f)\tOutside poligon.\n", i+1, x_of_point, y_of_point);
+        }
+        x_of_point += 4.0;
+        y_of_point += 4.0;
+    }
+
+    // Вычисление площади многоугольника
+    printf("\nArea of polygon: S = %f\n", Calculate_polygon_area(&test_polygon[0][0], 6U));
+
+    // Разворот многоугольника
+    for (int i = 0; i < 3; i++)
+    {
+        x_of_point = test_polygon[i][0];
+        y_of_point = test_polygon[i][1];
+        test_polygon[i][0] = test_polygon[5 - i][0];
+        test_polygon[i][1] = test_polygon[5 - i][1];
+        test_polygon[5 - i][0] = x_of_point;
+        test_polygon[5 - i][1] = y_of_point;
+    }
+    // Вычисление площади развернутого многоугольника
+    printf("\nArea of reversed polygon: S = %f\n", Calculate_polygon_area(&test_polygon[0][0], 6U));
+
+    printf("\n");
+}
+
+static void Show_plane_curve_approximation(void)
+{
+    // Набор точек (вершины правильного многоугольника)
+    static float set_of_points[6][2] = {{40.0   , 10.0  },
+                                        {25.0   , 35.98 },
+                                        {-5     , 35.98 },
+                                        {-20    , 10.0  },
+                                        {-5     , -15.98},
+                                        {25.0   , -15.98}};
+    
+    // Переменные для хранения результатов
+    // Координаты точки
+    float x_of_point = 0.0;
+    float y_of_point = 0.0;
+    // Координаты вектора
+    float x_of_vector = 0.0;
+    float y_of_vector = 0.0;
+
+    printf("\n");
+
+    // Аппроксимация точек окружностью (первый набор)
+    printf("Circle 1: Radius = %f, ", Circle_approximation(&set_of_points[0][0], 6U, &x_of_point, &y_of_point));
+    printf("Center = (%f, %f)\n", x_of_point, y_of_point);
+
+    // Аппроксимация точек прямой (первый набор)
+    printf("Line 1: Vector length = %f, ", Line_approximation(&set_of_points[0][0], 6U, &x_of_point, &y_of_point, &x_of_vector, &y_of_vector));
+    printf("Starting point = (%f, %f), Vector = (%f, %f)\n", x_of_point, y_of_point, x_of_vector, y_of_vector);
+
+    // Сжатие точек к оси 0Х
+    set_of_points[1][1] = 25.0;
+    set_of_points[2][1] = 25.0;
+    set_of_points[4][1] = -5.0;
+    set_of_points[5][1] = -5.0;
+
+    // Аппроксимация точек окружностью (второй набор)
+    printf("\nCircle 2: Radius = %f, ", Circle_approximation(&set_of_points[0][0], 6U, &x_of_point, &y_of_point));
+    printf("Center = (%f, %f)\n", x_of_point, y_of_point);
+
+    // Аппроксимация точек прямой (второй набор)
+    printf("Line 2: Vector length = %f, ", Line_approximation(&set_of_points[0][0], 6U, &x_of_point, &y_of_point, &x_of_vector, &y_of_vector));
+    printf("Starting point = (%f, %f), Vector = (%f, %f)\n", x_of_point, y_of_point, x_of_vector, y_of_vector);
+
+    printf("\n");
+}
+
+static void Show_space_curve_approximation(void)
+{
+    // Набор точек (вершины правильного многоугольника)
+    static float set_of_points[36][3] = {{ 10.0  , 10.0  , 10.0},
+                                        { 20.0  , 10.0  , 10.0},
+                                        { 20.0  , 20.0  , 10.0},
+                                        { 10.0  , 20.0  , 10.0},
+                                        { 10.0  , 10.0  , 20.0},
+                                        { 20.0  , 10.0  , 20.0},
+                                        { 20.0  , 20.0  , 20.0},
+                                        { 10.0  , 20.0  , 20.0}};
+
+    // Переменные для хранения результатов
+    static float curve_parameters[2][3] = {0};
+
+    printf("\n");
+
+    // Аппроксимация точек прямой (первый набор)
+    printf("Line_3D 1: Vector length = %f, ", Line_approximation_3D(&set_of_points[0][0], 8U, &curve_parameters[0][0]));
+    printf("Starting point = (%f, %f, %f), ", curve_parameters[0][0], curve_parameters[0][1], curve_parameters[0][2]);
+    printf("Vector = (%f, %f, %f)\n", curve_parameters[1][0], curve_parameters[1][1], curve_parameters[1][2]);
+
+    // Изменение координат точек
+    for (int i = 0; i < 36; i++)
+    {
+        set_of_points[i][0] = 2.0 * sin((double)(M_PI * i )/1.0) + 5.0 + (float)(1.0 * i); 
+        set_of_points[i][1] = 2.0 * cos((double)(M_PI * i )/1.0) + 5.0 + (float)(1.0 * i); 
+        set_of_points[i][2] = 10.0 + (float)(1.0 * i); 
+    }
+
+    // Аппроксимация точек прямой (второй набор)
+    printf("Line_3D 2: Vector length = %f, ", Line_approximation_3D(&set_of_points[0][0], 36U, &curve_parameters[0][0]));
+    printf("Starting point = (%f, %f, %f), ", curve_parameters[0][0], curve_parameters[0][1], curve_parameters[0][2]);
+    printf("Vector = (%f, %f, %f)\n", curve_parameters[1][0], curve_parameters[1][1], curve_parameters[1][2]);
+
+    printf("\n");
+}
