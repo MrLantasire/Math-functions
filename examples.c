@@ -68,6 +68,31 @@ static void Show_matrices(void)
         printf("\n");
     }
     
+    // Умножение матрицы на число
+    Matrix_mul_by_num(&instance_sq_matrix[0][0], 4U, 4U, 2.0);
+    printf("\nSquare matrix * 2\n");
+    printf("Determinant = %f\n", Define_determinant(&instance_sq_matrix[0][0], 4U,1.E-6));
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 4; j++)
+        {
+            printf("%f\t", instance_sq_matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Умножение матриц
+    printf("\n( matrix 4 x 4 ) X ( matrix 4 x 5 )\n");
+    Matrices_mul(&instance_sq_matrix[0][0], &instance_matrix[0][0], 4U, 4U, 5U, &instanse_tr_matrix[0][0]);
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 5; j++)
+        {
+            printf("%f\t", instanse_tr_matrix[i][j]);
+        }
+        printf("\n");
+    }
+
     printf("\n");
 }
 
@@ -223,6 +248,7 @@ static void Show_gis(void)
     printf("\n");
 }
 
+// Примеры работы с функциями модуля "polygon"
 static void Show_polygon(void)
 {
     // Тестовый многоугольник
@@ -273,6 +299,7 @@ static void Show_polygon(void)
     printf("\n");
 }
 
+// Примеры работы с функциями модуля "plane_curve_approximation"
 static void Show_plane_curve_approximation(void)
 {
     // Набор точек (вершины правильного многоугольника)
@@ -318,6 +345,7 @@ static void Show_plane_curve_approximation(void)
     printf("\n");
 }
 
+// Примеры работы с функциями модуля "space_curve_approximation"
 static void Show_space_curve_approximation(void)
 {
     // Набор точек (вершины правильного многоугольника)
@@ -356,6 +384,7 @@ static void Show_space_curve_approximation(void)
     printf("\n");
 }
 
+// Примеры работы с функциями модуля "vector"
 static void Show_vector(void)
 {
     // Векторы

@@ -141,3 +141,47 @@ float Define_determinant(float *matrix, unsigned char size, float tolerance)
     free(temp_matrix);
     return out;
 }
+
+/***********************************************************
+* Функция умножения матриц.
+* Входные данные:
+* first_matrix - Указатель на первую матрицу размером num_out_rows * num_common
+* second_matrix - Указатель на вторую матрицу размером num_common * num_out_colums
+* num_out_rows - Количество строк первой матрицы
+* num_common - Количество строк второй матрицы и количество столбцов первой матрицы
+* num_out_colums - Количество столбцов второй матрицы
+* Выходные данные:
+* out_matrix - Указатель на выходную матрицу размером num_out_rows * num_out_colums
+* значение out_matrix не должно равняться ни какому из значений first_matrix или second_matrix
+************************************************************/
+void Matrices_mul(float *first_matrix, float *second_matrix, unsigned char num_out_rows, unsigned char num_common, unsigned char num_out_colums, float *out_matrix)
+{
+    for (unsigned char i = 0; i < num_out_rows; i ++)
+    {
+        for (unsigned char j = 0; j < num_out_colums; j ++)
+        {
+            // Обнуление значения в выходной матрице
+            out_matrix[i * num_out_colums + j] = 0.0;
+            for (unsigned char k = 0; k < num_common; k ++)
+            {
+                out_matrix[i * num_out_colums + j] += first_matrix[i * num_common + k] * second_matrix[num_out_colums * k + j];
+            }
+        }
+    }
+}
+
+/***********************************************************
+* Функция умножает все значения матрицы на число.
+* Входные данные:
+* matrix - Указатель на матрицу
+* num_rows - Количество строк матрицы
+* num_colums - Количество столбцов матрицы
+* factor - Множитель матрицы
+************************************************************/
+void Matrix_mul_by_num(float *matrix, unsigned char num_rows, unsigned char num_colums, float factor)
+{
+    for (unsigned short i = 0; i < (num_rows * num_colums); i++)
+    {
+        matrix[i] *=  factor;
+    }
+}
