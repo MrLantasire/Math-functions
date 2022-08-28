@@ -1,6 +1,9 @@
 #ifndef __COMPLEX_H
 #define __COMPLEX_H
 
+#include <stdbool.h>
+
+// Структура комплексного числа
 typedef struct 
 {
     float real;
@@ -33,5 +36,8 @@ extern float Complex_abs(complex32_t z);
 
 // Вычисление комплексно-сопряжённого числа
 extern complex32_t Complex_conjugate(complex32_t z);
+
+// Определение равенства комплексных чисел
+extern bool Is_complex_equal(complex32_t a, complex32_t b, float tolerance);
 
 #endif //__COMPLEX_H

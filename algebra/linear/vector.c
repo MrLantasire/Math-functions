@@ -181,3 +181,17 @@ extern void Get_rotation_matrix(vector32_3D_t n, float angle, float *out_matrix)
     out_matrix[7] = n.k * n.j * (1.0 - cos(angle)) + n.i * sin(angle);
     out_matrix[8] = n.k * n.k + cos(angle) * (1.0 - n.k * n.k);
 }
+
+/***********************************************************
+* Функция определения равенства векторов в координатном виде.
+* Входные данные:
+* a - Первый вектор
+* b - Второй вектор
+* tolerance - Допуск сравнения
+* Выходные данные:
+* True - если вектора равны, False - вектора не равны
+************************************************************/
+bool Is_vector_equal(vector32_3D_t a, vector32_3D_t b, float tolerance)
+{
+    return ( (ABS(a.i - b.i) <= tolerance) && (ABS(a.j - b.j) <= tolerance) && (ABS(a.k - b.k) <= tolerance) );
+}

@@ -143,6 +143,22 @@ static void Show_complex_numbers(void)
     c = Complex_conjugate(b);
     printf("conjugate(b)= %f%+fi\n", c.real, c.imag);
 
+    // Сравнение комплексных чисел
+    c = Complex_mul(a,b);
+    a = Complex_div(a,b);
+    printf("a * b == a / b = ");
+    if ( Is_complex_equal(a, c, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
+
+    a = Complex_conjugate(a);
+    printf("a * b == conjugate(a / b) = ");
+    if ( Is_complex_equal(a, c, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
+
     printf("\n");
 }
 
@@ -472,6 +488,22 @@ static void Show_vector(void)
         }
         printf("\n");
     }
+
+    // Сравнение векторов
+    c = Vector_sub(a,b);
+    d = Vector_sub(b,a);
+    printf("\nc{%f, %f, %f} == d{%f, %f, %f} = ", c.i, c.j, c.k, d.i, d.j, d.k);
+    if ( Is_vector_equal(c, d, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
+    
+    d = Vector_mul(d, -1.0);
+    printf("c{%f, %f, %f} == d{%f, %f, %f} = ", c.i, c.j, c.k, d.i, d.j, d.k);
+    if ( Is_vector_equal(c, d, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
 
     printf("\n");
 }

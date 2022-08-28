@@ -130,3 +130,17 @@ complex32_t Complex_conjugate(complex32_t z)
 {
     return (complex32_t) {z.real, (-1. * z.imag)};
 }
+
+/***********************************************************
+* Функция определения равенства комплексных чисел.
+* Входные данные:
+* a - Первое комплексное число
+* b - Второе комплексное число
+* tolerance - Допуск сравнения
+* Выходные данные:
+* True - если комплексные числа равны, False - комплексные числа не равны
+************************************************************/
+bool Is_complex_equal(complex32_t a, complex32_t b, float tolerance)
+{
+    return ( (ABS(a.real - b.real) <= tolerance) && (ABS(a.imag - b.imag) <= tolerance) );
+}

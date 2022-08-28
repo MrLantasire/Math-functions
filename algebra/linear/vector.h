@@ -1,6 +1,9 @@
 #ifndef __VECTOR_H
 #define __VECTOR_H
 
+#include <stdbool.h>
+
+// Структура вектора в 3-х мерном пространстве
 typedef struct
 {
     float i;
@@ -37,5 +40,8 @@ extern float Define_angle_of_vectors(vector32_3D_t a, vector32_3D_t b);
 
 // Вычисление матрицы поворота вокруг заданного вектора
 extern void Get_rotation_matrix(vector32_3D_t n, float angle, float *out_matrix);
+
+// Определение равенства векторов
+extern bool Is_vector_equal(vector32_3D_t a, vector32_3D_t b, float tolerance);
 
 #endif //__VECTOR_H
