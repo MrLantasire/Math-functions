@@ -18,6 +18,7 @@ add_subdirectory(geometry/plane/)
 add_subdirectory(geometry/space/)
 
 target_link_libraries(${PROJECT_NAME} matrix)
+target_link_libraries(${PROJECT_NAME} vector)
 target_link_libraries(${PROJECT_NAME} complex)
 target_link_libraries(${PROJECT_NAME} equation)
 target_link_libraries(${PROJECT_NAME} gis)

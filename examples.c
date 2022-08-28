@@ -7,6 +7,7 @@
 #include "polygon.h"
 #include "plane_curve_approximation.h"
 #include "space_curve_approximation.h"
+#include "vector.h"
 
 static void Show_matrices(void);
 static void Show_complex_numbers(void);
@@ -15,6 +16,7 @@ static void Show_gis(void);
 static void Show_polygon(void);
 static void Show_plane_curve_approximation(void);
 static void Show_space_curve_approximation(void);
+static void Show_vector(void);
 
 int main()
 {   
@@ -25,6 +27,7 @@ int main()
     Show_polygon();
     Show_plane_curve_approximation();
     Show_space_curve_approximation();
+    Show_vector();
 
     return 0;
 }
@@ -349,6 +352,97 @@ static void Show_space_curve_approximation(void)
     printf("Line_3D 2: Vector length = %f, ", Line_approximation_3D(&set_of_points[0][0], 36U, &curve_parameters[0][0]));
     printf("Starting point = (%f, %f, %f), ", curve_parameters[0][0], curve_parameters[0][1], curve_parameters[0][2]);
     printf("Vector = (%f, %f, %f)\n", curve_parameters[1][0], curve_parameters[1][1], curve_parameters[1][2]);
+
+    printf("\n");
+}
+
+static void Show_vector(void)
+{
+    // Векторы
+    vector32_3D_t a = {1.0,1.0,0.0};
+    vector32_3D_t b = {-1.0,1.0,0.0};
+    vector32_3D_t c = {0.0,0.0,1.0};
+    vector32_3D_t d = {0.0,0.0,0.0};
+
+    // Массив для матрицы поворота
+    static float matrix[3][3] = {0};
+
+    printf("\n");
+
+    
+    // Длина векторов
+    printf("a{%f, %f, %f} |a| = %f\n", a.i, a.j, a.k, Vector_abs(a));
+    printf("b{%f, %f, %f} |b| = %f\n", b.i, b.j, b.k, Vector_abs(b));
+    printf("c{%f, %f, %f} |c| = %f\n", c.i, c.j, c.k, Vector_abs(c));
+
+    // Сложение векторов
+    d = Vector_add(a,b);
+    printf("a + b{%f, %f, %f} |a + b| = %f\n", d.i, d.j, d.k, Vector_abs(d));
+    // Вычитание векторов
+    d = Vector_sub(c,a);
+    printf("c - a{%f, %f, %f} |c - a| = %f\n", d.i, d.j, d.k, Vector_abs(d));
+    // Умножение вектора на число
+    d = Vector_mul(c, 15.0);
+    printf("15 * c = {%f, %f, %f} |15 * c| = %f\n", d.i, d.j, d.k, Vector_abs(d));
+    // Векторное произведение векторов
+    d = Vector_cross_mul(c,b);
+    printf("c X b{%f, %f, %f} |c X b| = %f\n", d.i, d.j, d.k, Vector_abs(d));
+    // Скалярное произведение векторов
+    printf("d{%f, %f, %f} |d| = %f a * d = %f\n", d.i, d.j, d.k, Vector_abs(d), Vector_scalar_mul(a,d));
+    // Смешанное произведение векторов
+    printf("a * (b X c) = %f\n", Vector_mixed_mul(a,b,c));
+    // Вычисление нормализованного вектора
+    d = Vector_normalize(d);
+    printf("d / |d| {%f, %f, %f} |d / |d|| = %f\n", d.i, d.j, d.k, Vector_abs(d));
+    // Вычисление угла между векторами
+    printf("b^c = %f [grad]\t", RAD_TO_GRAD(Define_angle_of_vectors(b,c)));
+    printf("a^d = %f [grad]\n", RAD_TO_GRAD(Define_angle_of_vectors(a,d)));
+
+    // Матрицы поворота
+    Get_rotation_matrix((vector32_3D_t) {1.0, 0.0, 0.0}, GRAD_TO_RAD(-45.0), &matrix[0][0]);
+    printf("\nX-axis rotation matrix by -45 [grad]\n");
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            printf("%f\t", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    Get_rotation_matrix((vector32_3D_t){0.0, 1.0, 0.0}, GRAD_TO_RAD(90.0), &matrix[0][0]);
+    printf("\nY-axis rotation matrix by 90 [grad]\n");
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            printf("%f\t", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    Get_rotation_matrix((vector32_3D_t){0.0, 0.0, 1.0}, GRAD_TO_RAD(180.0), &matrix[0][0]);
+    printf("\nZ-axis rotation matrix by 180 [grad]\n");
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            printf("%f\t", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    d = Vector_cross_mul(a,b);
+    Get_rotation_matrix(d, Define_angle_of_vectors(a,b), &matrix[0][0]);
+    printf("\nFree-axis {%f, %f, %f} rotation matrix by %f [grad]\n", d.i, d.j, d.k, RAD_TO_GRAD(Define_angle_of_vectors(a,b)));
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            printf("%f\t", matrix[i][j]);
+        }
+        printf("\n");
+    }
 
     printf("\n");
 }
