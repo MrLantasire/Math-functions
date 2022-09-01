@@ -144,3 +144,15 @@ bool Is_complex_equal(complex32_t a, complex32_t b, float tolerance)
 {
     return ( (ABS(a.real - b.real) <= tolerance) && (ABS(a.imag - b.imag) <= tolerance) );
 }
+
+/***********************************************************
+* Функция определения комплексно ли число (имеет мнимую часть отличную от 0).
+* Входные данные:
+* a - Число в комплексном виде
+* Выходные данные:
+* True - число комплексное, False - число не комплексное
+************************************************************/
+extern bool Is_number_complex(complex32_t a)
+{
+    return (ABS(a.imag) > 0.0);
+}

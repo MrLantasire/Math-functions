@@ -40,4 +40,7 @@ extern complex32_t Complex_conjugate(complex32_t z);
 // Определение равенства комплексных чисел
 extern bool Is_complex_equal(complex32_t a, complex32_t b, float tolerance);
 
+// Определение комплексно ли число
+extern bool Is_number_complex(complex32_t a);
+
 #endif //__COMPLEX_H
