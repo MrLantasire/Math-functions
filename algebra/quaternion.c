@@ -182,3 +182,36 @@ float Quaternion_abs(quaternion32_t q)
 {
     return (sqrt(q.scalar * q.scalar + q.vector.i * q.vector.i + q.vector.j * q.vector.j + q.vector.k * q.vector.k));
 }
+
+/***********************************************************
+* Функция кватерниона поворота ({cos(a), v*sin(a)}).
+* Входные данные:
+* axis - Вектор оси поворота
+* angle - Угол поворота [rad]
+* Выходные данные:
+* Кватернион поворота
+************************************************************/
+quaternion32_t Quaternion_rotor(vector32_3D_t axis, float angle)
+{
+    axis = Vector_normalize(axis);
+    axis = Vector_mul(axis, sin(angle));
+    return (quaternion32_t) {cos(angle), axis};
+}
+
+/***********************************************************
+* Функция поворота кватерниона на угол.
+* Входные данные:
+* q - Исходный кватернион
+* axis - Вектор оси поворота
+* angle - Угол поворота [rad]
+* Выходные данные:
+* Повернутый кватернион
+************************************************************/
+quaternion32_t Rotate_quaternion(quaternion32_t q, vector32_3D_t axis, float angle)
+{
+    quaternion32_t r = Quaternion_rotor(axis, (angle / 2.0));
+    q = Quaternion_mul(r,q);
+    r = Quaternion_reciprocal(r);
+    q = Quaternion_mul(q,r);
+    return q;
+}

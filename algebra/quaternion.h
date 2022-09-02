@@ -44,4 +44,10 @@ extern bool Is_quaternion_scalar(quaternion32_t q);
 // Вычисление модуля (нормы) кватерниона
 extern float Quaternion_abs(quaternion32_t q);
 
+// Кватернион поворота
+extern quaternion32_t Quaternion_rotor(vector32_3D_t axis, float angle);
+
+// Поворот кватерниона
+extern quaternion32_t Rotate_quaternion(quaternion32_t q, vector32_3D_t axis, float angle);
+
 #endif //__QUATERNION_H

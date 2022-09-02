@@ -520,6 +520,9 @@ static void Show_quaternion(void)
     quaternion32_t c = {0};
     quaternion32_t d = {0};
 
+    // Вектор для вращения
+    vector32_3D_t axis = {0.0, 0.0, 1.0};
+
     printf("\n");
 
     printf("a{%f, %fi, %fj, %fk} |a| = %f\n", a.scalar, a.vector.i, a.vector.j, a.vector.k, Quaternion_abs(a));
@@ -557,6 +560,13 @@ static void Show_quaternion(void)
     // Нормализация кватерниона
     c = Quaternion_normalize(d);
     printf("a ^ (-1) / |a ^ (-1)| {%f, %fi, %fj, %fk} |a ^ (-1) / |a ^ (-1)|| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Кватернион поворота
+    c = Quaternion_rotor(axis, GRAD_TO_RAD(90.0));
+    printf("rotor{%f, %fi, %fj, %fk} |rotor| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Поворот кватерниона
+    c = Rotate_quaternion(a, axis, GRAD_TO_RAD(90.0));
+    printf("rot(a){%f, %fi, %fj, %fk} |rot(a)| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+
 
     printf("\n");
 }
