@@ -8,6 +8,7 @@
 #include "plane_curve_approximation.h"
 #include "space_curve_approximation.h"
 #include "vector.h"
+#include "quaternion.h"
 
 static void Show_matrices(void);
 static void Show_complex_numbers(void);
@@ -17,6 +18,7 @@ static void Show_polygon(void);
 static void Show_plane_curve_approximation(void);
 static void Show_space_curve_approximation(void);
 static void Show_vector(void);
+static void Show_quaternion(void);
 
 int main()
 {   
@@ -28,6 +30,7 @@ int main()
     Show_plane_curve_approximation();
     Show_space_curve_approximation();
     Show_vector();
+    Show_quaternion();
 
     return 0;
 }
@@ -504,6 +507,56 @@ static void Show_vector(void)
         printf("True\n");
     else
         printf("False\n");
+
+    printf("\n");
+}
+
+// Примеры работы с функциями модуля "quaternon"
+static void Show_quaternion(void)
+{
+    // Кватернионы
+    quaternion32_t a = {1.0, {2.0, 3.0, 4.0}};
+    quaternion32_t b = {1.0, {0}};
+    quaternion32_t c = {0};
+    quaternion32_t d = {0};
+
+    printf("\n");
+
+    printf("a{%f, %fi, %fj, %fk} |a| = %f\n", a.scalar, a.vector.i, a.vector.j, a.vector.k, Quaternion_abs(a));
+    printf("b{%f, %fi, %fj, %fk} |b| = %f\n", b.scalar, b.vector.i, b.vector.j, b.vector.k, Quaternion_abs(b));
+
+    // Сложение кватернионов
+    c = Quaternion_add(a,b);
+    printf("a + b {%f, %fi, %fj, %fk} |a + b| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Вычитание кватернионов
+    c = Quaternion_sub(a,b);
+    printf("a - b {%f, %fi, %fj, %fk} |a - b| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Умножение кватернионов
+    c = Quaternion_mul(a,a);
+    printf("a * a {%f, %fi, %fj, %fk} |a * a| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Деление кватернионов
+    c = Quaternion_div(b,a);
+    printf("b / a {%f, %fi, %fj, %fk} |b / a| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    // Обратный кватернион
+    d = Quaternion_reciprocal(a);
+    printf("a ^ (-1) {%f, %fi, %fj, %fk} |a ^ (-1)| = %f\n", d.scalar, d.vector.i, d.vector.j, d.vector.k, Quaternion_abs(d));
+    // Сравнивание кватернионов
+    printf("b / a == a ^ (-1) = ");
+    if ( Is_quaternion_equal(c, d, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
+    // Сопряженный кватернион
+    c = Quaternion_conjugate(c);
+    printf("conjugate(b / a) {%f, %fi, %fj, %fk} |conjugate(b / a)| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+    printf("conjugate(b / a) == a ^ (-1) = ");
+    if ( Is_quaternion_equal(c, d, 1.E-6) )
+        printf("True\n");
+    else
+        printf("False\n");
+    // Нормализация кватерниона
+    c = Quaternion_normalize(d);
+    printf("a ^ (-1) / |a ^ (-1)| {%f, %fi, %fj, %fk} |a ^ (-1) / |a ^ (-1)|| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
 
     printf("\n");
 }
