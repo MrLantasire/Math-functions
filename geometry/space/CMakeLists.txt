@@ -12,3 +12,13 @@ target_link_libraries(plane_curve_approximation complex)
 target_link_libraries(plane_curve_approximation equation)
 
 target_include_directories(space_curve_approximation PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(SOURCE kinematics.c)
+set(HEADER kinematics.h)
+add_library(kinematics ${SOURCE} ${HEADER})
+
+target_link_libraries(kinematics vector)
+target_link_libraries(kinematics matrix)
+target_link_libraries(kinematics equation)
+
+target_include_directories(kinematics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

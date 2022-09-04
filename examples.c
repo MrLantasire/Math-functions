@@ -9,6 +9,7 @@
 #include "space_curve_approximation.h"
 #include "vector.h"
 #include "quaternion.h"
+#include "kinematics.h"
 
 static void Show_matrices(void);
 static void Show_complex_numbers(void);
@@ -19,6 +20,7 @@ static void Show_plane_curve_approximation(void);
 static void Show_space_curve_approximation(void);
 static void Show_vector(void);
 static void Show_quaternion(void);
+static void Show_kinematics(void);
 
 int main()
 {   
@@ -31,6 +33,7 @@ int main()
     Show_space_curve_approximation();
     Show_vector();
     Show_quaternion();
+    Show_kinematics();
 
     return 0;
 }
@@ -588,6 +591,35 @@ static void Show_quaternion(void)
     // Поворот кватерниона
     c = Rotate_quaternion(a, axis, GRAD_TO_RAD(90.0));
     printf("rot(a){%f, %fi, %fj, %fk} |rot(a)| = %f\n", c.scalar, c.vector.i, c.vector.j, c.vector.k, Quaternion_abs(c));
+
+
+    printf("\n");
+}
+
+// Примеры работы с функциями модуля "kinematics"
+static void Show_kinematics(void)
+{
+    // Переменные для хранения углов
+    static float angles[2][2] = {0};
+
+    // Оси вращения
+    vector32_3D_t first_axis = {1.0, 0.0, 0.0};
+    vector32_3D_t second_axis = {0.0, 1.0, 0.0};
+
+    // Векторы
+    vector32_3D_t initial = {0.0, 0.0, 1.0};
+    vector32_3D_t final = {1.0, 1.0, 0.0};
+
+    Define_spatial_angles_of_vectors(initial, final, first_axis, second_axis, &angles[0][0], &angles[1][0]);
+
+    for (int i = 0; i < 2; i++)
+    {
+        printf("A = %f B = %f\n", RAD_TO_GRAD(angles[0][i]), RAD_TO_GRAD(angles[1][i]));
+    }
+
+
+    printf("\n");
+
 
 
     printf("\n");
