@@ -44,4 +44,10 @@ extern void Get_rotation_matrix(vector32_3D_t n, float angle, float *out_matrix)
 // Определение равенства векторов
 extern bool Is_vector_equal(vector32_3D_t a, vector32_3D_t b, float tolerance);
 
+// Проецирование вектора на вектор
+extern vector32_3D_t Project_vector_onto_vector(vector32_3D_t vector, vector32_3D_t base);
+
+// Проецирование вектора на нормаль к вектору
+extern vector32_3D_t Project_vector_onto_normal(vector32_3D_t vector, vector32_3D_t base);
+
 #endif //__VECTOR_H

@@ -508,6 +508,28 @@ static void Show_vector(void)
     else
         printf("False\n");
 
+    // Проецирование
+    printf("\nProjections:\n");
+    c.i = 5.0;
+    c.j = 5.0;
+    c.k = 5.0;
+    printf("c = {%f, %f, %f}\n", c.i, c.j, c.k);
+    // Проецирование вектора на вектор
+    d = Project_vector_onto_vector(a,b);
+    printf("a | b = {%f, %f, %f}\n", d.i, d.j, d.k);
+    d = Project_vector_onto_vector(c,a);
+    printf("c | a = {%f, %f, %f}\n", d.i, d.j, d.k);
+    d = Project_vector_onto_vector(c,b);
+    printf("c | b = {%f, %f, %f}\n", d.i, d.j, d.k);
+    // Проецирование вектора на нормаль
+    d = Project_vector_onto_normal(a,b);
+    printf("a |- b = {%f, %f, %f}\n", d.i, d.j, d.k);
+    d = Project_vector_onto_normal(c,a);
+    printf("c |- a = {%f, %f, %f}\n", d.i, d.j, d.k);
+    d = Project_vector_onto_normal(c,b);
+    printf("c |- b = {%f, %f, %f}\n", d.i, d.j, d.k);
+
+    
     printf("\n");
 }
 

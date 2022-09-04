@@ -195,3 +195,34 @@ bool Is_vector_equal(vector32_3D_t a, vector32_3D_t b, float tolerance)
 {
     return ( (ABS(a.i - b.i) <= tolerance) && (ABS(a.j - b.j) <= tolerance) && (ABS(a.k - b.k) <= tolerance) );
 }
+
+/***********************************************************
+* Функция проецирования вектора на вектор.
+* Входные данные:
+* vector - Исходный вектор
+* base - Вектор для проеции
+* Выходные данные:
+* Вектор - результат проекции
+************************************************************/
+vector32_3D_t Project_vector_onto_vector(vector32_3D_t vector, vector32_3D_t base)
+{
+    // Нормализация вектора на который идет проецирование
+    base = Vector_normalize(base);
+
+    return Vector_mul(base, Vector_scalar_mul(vector, base));
+}
+
+/***********************************************************
+* Функция проецирования вектора на плоскость, нормальную вектору.
+* Входные данные:
+* vector - Исходный вектор
+* base - Вектор нормали плоскости
+* Выходные данные:
+* Вектор - результат проекции
+************************************************************/
+vector32_3D_t Project_vector_onto_normal(vector32_3D_t vector, vector32_3D_t base)
+{
+    base = Vector_normalize(base);
+
+    return Vector_sub(vector, Project_vector_onto_vector(vector, base));
+}
