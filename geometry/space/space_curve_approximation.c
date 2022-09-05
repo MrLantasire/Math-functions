@@ -58,6 +58,14 @@ float Line_approximation_3D(float *points, unsigned short points_num, float *lin
     matrix[3] = matrix[1];
     matrix[7] = matrix[5];
 
+    // Избавление от больших чисел в матрице
+    matrix[9] = Define_determinant(&matrix[0], 3U, 1.E-37);
+    if (matrix[9] > 0.0)
+    {
+        matrix[9] = pow(matrix[9], (-1.0 / 3.0));
+        Matrix_mul_by_num(&matrix[0], 3U, 3U, matrix[9]);
+    }   
+
     // Вычисление инвариантов
     matrix[9] = 0.0;
     matrix[10] = 0.0;
