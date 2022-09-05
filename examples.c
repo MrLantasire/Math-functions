@@ -610,6 +610,8 @@ static void Show_kinematics(void)
     vector32_3D_t initial = {0.0, 0.0, 1.0};
     vector32_3D_t final = {1.0, 1.0, 0.0};
 
+    printf("\n");
+
     Define_spatial_angles_of_vectors(initial, final, first_axis, second_axis, &angles[0][0], &angles[1][0]);
 
     for (int i = 0; i < 2; i++)
@@ -617,10 +619,27 @@ static void Show_kinematics(void)
         printf("A = %f B = %f\n", RAD_TO_GRAD(angles[0][i]), RAD_TO_GRAD(angles[1][i]));
     }
 
+    // Оси: {1.0, 0.0, 1.0} и  {0.0, 0.0, 1.0}
+    first_axis.k = 1.0;
+    second_axis.j = 0.0;
+    second_axis.k = 1.0;
+    Define_spatial_angles_of_vectors(initial, final, first_axis, second_axis, &angles[0][0], &angles[1][0]);
 
-    printf("\n");
+    for (int i = 0; i < 2; i++)
+    {
+        printf("A = %f C = %f\n", RAD_TO_GRAD(angles[0][i]), RAD_TO_GRAD(angles[1][i]));
+    }
 
+    // Оси: {1.0, 1.0, 1.0} и  {0.0, -1.0, 1.0}
+    first_axis.j = 1.0;
+    second_axis.j = 0.0;
+    second_axis.j = -1.0;
+    Define_spatial_angles_of_vectors(initial, final, first_axis, second_axis, &angles[0][0], &angles[1][0]);
 
+    for (int i = 0; i < 2; i++)
+    {
+        printf("B = %f C = %f\n", RAD_TO_GRAD(angles[0][i]), RAD_TO_GRAD(angles[1][i]));
+    }
 
     printf("\n");
 }

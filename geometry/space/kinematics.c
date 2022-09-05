@@ -68,6 +68,13 @@ unsigned char Define_spatial_angles_of_vectors( vector32_3D_t initial_vec, vecto
         // Если только комплексные корни, значит нет решений
         if (!(Solve_quadratic_equation(matrix[0], matrix[1], matrix[2], solutions) < 0.0))
         {
+            // Дублирование значений начального и конечного векторов
+            matrix[0] = initial_vec.i;
+            matrix[1] = initial_vec.j;
+            matrix[2] = initial_vec.k;
+            matrix[3] = final_vec.i;
+            matrix[4] = final_vec.j;
+            matrix[5] = final_vec.k;
 
             for (unsigned char i = 0; i < 2; i++)
             {
@@ -77,16 +84,26 @@ unsigned char Define_spatial_angles_of_vectors( vector32_3D_t initial_vec, vecto
 
                 // Проецирование вектора
                 projected_vec = Project_vector_onto_normal(inter_vec, first_axis);
+                initial_vec = Project_vector_onto_normal(initial_vec, first_axis);
                 out_first_angle[i] = Define_angle_of_vectors(initial_vec, projected_vec);
 
                 if (Vector_mixed_mul(initial_vec, projected_vec, first_axis) < 0.0)
                     out_first_angle[i] *= -1.0;
 
                 projected_vec = Project_vector_onto_normal(inter_vec, second_axis);
+                final_vec = Project_vector_onto_normal(final_vec, second_axis);
                 out_second_angle[i] = Define_angle_of_vectors(final_vec, projected_vec);
 
                 if (Vector_mixed_mul(projected_vec, final_vec, second_axis) < 0.0)
                     out_second_angle[i] *= -1.0;
+                
+                // Возвращение значений в векторы
+                initial_vec.i = matrix[0];
+                initial_vec.j = matrix[1];
+                initial_vec.k = matrix[2];
+                final_vec.i = matrix[3];
+                final_vec.j = matrix[4];
+                final_vec.k = matrix[5];
             }
 
             // Есть решение
